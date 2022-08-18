@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 void main() {
   runApp(
@@ -39,18 +40,48 @@ class Person implements Comparable {
   
 }
 
+class PersonDB{
+  final String dbName;
+  Database?  _db;
+  List<Person> peoples =[];
+
+  PersonDB(this.dbName);
+
+  Future<bool> open() async{
+    if(_db != null){
+      return true;
+    }
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path ='${directory.path}/db.sqlite';
+    try{
+      final db = await openDatabase(path);
+      _db = db;
+
+      // sql create table 
+      const create = '''CREATE TABLE IF NOT EXISTS PEOPLE(
+        ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        FIRST_NAME STRING NOT NULL,
+        LAST_NAME STRING NOT NULL
+      )''';
+
+      await db.execute(create);
+
+    } catch(e){
+      print('Error$e');
+      return false;
+    }
+  }
+}
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  void test() async {
-    final directory = await getApplicationDocumentsDirectory();
-    final path ='${directory.path}/db.sqlite';
-    print(path);
-  }
+
 
   @override
   Widget build(BuildContext context) {
-    test();
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
