@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(
@@ -8,7 +9,7 @@ void main() {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(),
+      home: const HomePage(),     
     ),
   );
 }
@@ -18,8 +19,12 @@ class Person implements Comparable {
   final String firstName;
   final String lastName;
  
-  const Person({required this.id, required this.firstName,required this.lastName,});
-  
+  const Person({ 
+    required this.id, 
+    required this.firstName,
+    required this.lastName,
+  });
+   
   @override
   int compareTo(covariant Person other) => other.id.compareTo(id);
 
@@ -37,8 +42,15 @@ class Person implements Comparable {
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
+  void test() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final path ='${directory.path}/db.sqlite';
+    print(path);
+  }
+
   @override
   Widget build(BuildContext context) {
+    test();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
